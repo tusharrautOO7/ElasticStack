@@ -14,6 +14,7 @@ pip install docker-compose
 configure their Docker virtual machine to have more than the default 2 GiB of
 RAM:
 
+To change elasticsearch and other components of stack version, open .env file and change tag and elasticsearch variable value which is 6.2.2 by default.
 
 ## Starting the stack:
 1. docker-compose.yml :
