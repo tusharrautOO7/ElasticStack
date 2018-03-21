@@ -1,10 +1,11 @@
-# stack-docker
+# Elastic-Stack-Docker
 This example Docker Compose configuration demonstrates many components of the
 Elastic Stack, all running on a single machine under Docker.
 
-## Prerequisites
+## Prerequisites:
 - Docker and Compose. Windows and Mac users get Compose installed automatically
 with Docker. Linux users can:
+
 ```
 pip install docker-compose
 ```
@@ -14,11 +15,13 @@ configure their Docker virtual machine to have more than the default 2 GiB of
 RAM:
 
 
-## Starting the stack
-Try `docker-compose up` to create a demonstration Elastic Stack with
-Elasticsearch, Kibana, Logstash, Auditbeat, Metricbeat, Filebeat, Packetbeat,
+## Starting the stack:
+1. docker-compose.yml :
+	Using this `docker-compose up` command will create stack with only elasticsearch and kibana.
+2. docker-compose.yml-complete-stack :
+	Using the above file(need to rename as docker-compose.yml) & then run `docker-compose up` to create a demonstration Elastic Stack with Elasticsearch, Kibana, Logstash, Auditbeat, Metricbeat, Filebeat, Packetbeat,
 and Heartbeat.
 
-Point a browser at [`http://localhost:5601`](http://localhost:5601) to see the results.
+Open a browser at [`http://localhost:5601`](http://localhost:5601) to see the results.
 
 Log in with `elastic` / `secret`.
