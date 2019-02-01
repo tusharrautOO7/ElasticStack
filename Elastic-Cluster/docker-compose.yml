@@ -1,0 +1,43 @@
+version: '3'
+services:
+  gateway:
+    image: docker.elastic.co/elasticsearch/elasticsearch-platinum:${TAG}
+    container_name: elasticsearch-gateway
+    environment: ['http.host=0.0.0.0', 'UNICAST_HOSTS=master', 'TYPE=GATEWAY', 'transport.host=127.0.0.1', 'ELASTIC_PASSWORD=${ELASTIC_PASSWORD}']
+    ports: ['0.0.0.0:9200:9200']
+    networks: ['stack']
+
+  master:
+    image: docker.elastic.co/elasticsearch/elasticsearch-platinum:${TAG}
+    container_name: elasticsearch-master
+    environment: ['http.host=0.0.0.0', 'UNICAST_HOSTS=gateway', 'TYPE=MASTER', 'MIN_MASTERS=2', 'transport.host=127.0.0.1', 'ELASTIC_PASSWORD=${ELASTIC_PASSWORD}']
+    ports: ['0.0.0.0:9200:9200']
+    networks: ['stack']
+
+  data:
+    image: docker.elastic.co/elasticsearch/elasticsearch-platinum:${TAG}
+    container_name: elasticsearch-data
+    environment: ['http.host=0.0.0.0', 'UNICAST_HOSTS=gateway,master', 'TYPE=DATA', 'transport.host=127.0.0.1', 'ELASTIC_PASSWORD=${ELASTIC_PASSWORD}']
+    ports: ['0.0.0.0:9200:9200']
+    networks: ['stack']
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${TAG}
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+    ports: ['0.0.0.0:5601:5601']
+    networks: ['stack']
+    depends_on: ['gateway']
+
+  setup_kibana:
+    image: centos:7
+    container_name: setup_kibana
+    volumes: ['./scripts/setup-kibana.sh:/usr/local/bin/setup-kibana.sh:ro']
+    command: ['/bin/bash', '-c', 'cat /usr/local/bin/setup-kibana.sh | tr -d "\r" | bash']
+    environment: ['ELASTIC_PASSWORD=${ELASTIC_PASSWORD}']
+    networks: ['stack']
+    depends_on: ['gateway']
+
+networks: {stack: {}}
